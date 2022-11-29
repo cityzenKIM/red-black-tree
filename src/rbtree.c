@@ -236,6 +236,7 @@ void erase_fix_up(rbtree *t, node_t *x)
 
     node_t *w; // x의 형제 노드
     // x가 루트이거나 x가 레드이면 while문을 종료한다.
+
     while (x != t->root && x->color == RBTREE_BLACK)
     {
         if (x == x->parent->left)
@@ -300,7 +301,7 @@ void erase_fix_up(rbtree *t, node_t *x)
                     w->color = RBTREE_RED;
                     w->right->color = RBTREE_BLACK;
                     left_rotate(t, w);
-                    w = x->parent->right;
+                    w = x->parent->left;
                 }
                 // 경우4. w는 블랙, w의 왼쪽 자식이 레드일 때
                 w->color = x->parent->color;
@@ -349,7 +350,6 @@ int rbtree_erase(rbtree *t, node_t *z)
     if (y != z)
     {
         z->key = y->key;
-        z->color = y->color;
     }
     // 삭제한 노드가 레드이면 RB트리 조건을 위반하지 않는다
     if (y->color == RBTREE_BLACK)
@@ -357,10 +357,25 @@ int rbtree_erase(rbtree *t, node_t *z)
     free(y);
     return 0;
 }
-
+void inorder_traversing(const rbtree *t, node_t *node, key_t *arr, const size_t n)
+{
+    if (node == t->nil)
+        return;
+    inorder_traversing(t, node->left, arr, n);
+    for (int i = 0; i < n; i++)
+    {
+        if (!arr[i])
+        {
+            arr[i] = node->key;
+            break;
+        }
+    }
+    inorder_traversing(t, node->right, arr, n);
+}
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n)
 {
     // TODO: implement to_array
+    inorder_traversing(t, t->root, arr, n);
     return 0;
 }
 
