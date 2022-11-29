@@ -1,3 +1,4 @@
+#define SENTINEL
 #include <assert.h>
 #include <rbtree.h>
 #include <stdbool.h>
