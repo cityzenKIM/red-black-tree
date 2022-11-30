@@ -11,7 +11,7 @@
 //     printf("%d:%d\n", node->key, node->color);
 //     print_tree(t, node->left, level + 1);
 // }
-int main(int argc, char* argv[]) {
+// int main(int argc, char* argv[]) {
     // rbtree* t = new_rbtree();
     // t->root = rbtree_insert(t, 8);
     // t->root = rbtree_insert(t, 1);
@@ -70,4 +70,4 @@ int main(int argc, char* argv[]) {
     // // rbtree_erase(t, x);
     // // print_tree(t, t->root, 0);
     // return 0;
-}
+// }
