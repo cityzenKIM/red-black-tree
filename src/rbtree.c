@@ -240,76 +240,60 @@ node_t *tree_minimum(rbtree *t, node_t *x)
     }
     return x;
 }
-void rbtree_erase_fixup(rbtree* t, node_t* z)
-{
-    node_t* w;
-    while (z != t->root && z->color == RBTREE_BLACK)
-    {
-        if (z == z->parent->left)
-        {
-            w = z->parent->right;
-            if (w->color == RBTREE_RED)
-            {
-                color_t x = w->color;
-                w->color = z->parent->color;
-                z->parent->color = x;
-                rbtree_rotateLeft(t, z->parent);
-                w = z->parent->right;
-            }
-            if (w->color == RBTREE_BLACK && w->left->color == RBTREE_BLACK && w->right->color == RBTREE_BLACK)
-            {
-                w->color = RBTREE_RED;
-                z = z->parent;
-            }
-            else {
-                if (w->color == RBTREE_BLACK && w->left->color == RBTREE_RED) {
-                    color_t x = w->left->color;
-                    w->left->color = w->color;
-                    w->color = x;
-                    rbtree_rotateRight(t, w);
-                    w = z->parent->right;
-                }
-                color_t x = w->color;
-                w->color = w->parent->color;
-                w->parent->color = x;
-                w->right->color = RBTREE_BLACK;
-                rbtree_rotateLeft(t, z->parent);
-                z = t->root;
-            }
+void rbtree_erase_fixup(rbtree *t, node_t *x){
+  node_t *w;
+  while (x != t -> root && x -> color == RBTREE_BLACK){
+    if (x == x -> parent -> left) {
+      w = x -> parent -> right;
+      if (w -> color == RBTREE_RED){
+        w -> color = RBTREE_BLACK;
+        x -> parent -> color = RBTREE_RED;
+        rbtree_rotateLeft(t, x -> parent);
+        w = x -> parent -> right;
+      }
+      if (w -> left -> color == RBTREE_BLACK && w -> right -> color == RBTREE_BLACK){
+        w -> color = RBTREE_RED;
+        x = x -> parent;
+      } else {
+        if (w -> right -> color == RBTREE_BLACK) {
+          w -> left -> color = RBTREE_BLACK;
+          w -> color = RBTREE_RED;
+          rbtree_rotateRight(t, w);
+          w = x -> parent -> right;
         }
-        else {
-            w = z->parent->left;
-            if (w->color == RBTREE_RED)
-            {
-                color_t x = w->color;
-                w->color = z->parent->color;
-                z->parent->color = x;
-                rbtree_rotateRight(t, z->parent);
-                w = w->parent->left;
-            }
-            if (w->color == RBTREE_BLACK && w->left->color == RBTREE_BLACK && w->right->color == RBTREE_BLACK)
-            {
-                w->color = RBTREE_RED;
-                z = z->parent;
-            }
-            else {
-                if (w->color == RBTREE_BLACK && w->right->color == RBTREE_RED) {
-                    color_t x = w->right->color;
-                    w->right->color = w->color;
-                    w->color = x;
-                    rbtree_rotateLeft(t, w);
-                    w = z->parent->left;
-                }
-                color_t x = w->color;
-                w->color = w->parent->color;
-                w->parent->color = x;
-                w->left->color = RBTREE_BLACK;
-                rbtree_rotateRight(t, z->parent);
-                z = t->root;
-            }
+        w -> color = x -> parent -> color;
+        x -> parent -> color = RBTREE_BLACK;
+        w -> right -> color = RBTREE_BLACK;
+        rbtree_rotateLeft(t, x -> parent);
+        x = t -> root;
+      }
+    } else {
+      w = x -> parent -> left;
+      if (w -> color == RBTREE_RED){
+        w -> color = RBTREE_BLACK;
+        x -> parent -> color = RBTREE_RED;
+        rbtree_rotateRight(t, x -> parent);
+        w = x -> parent -> left;
+      }
+      if (w -> right -> color == RBTREE_BLACK && w -> left -> color == RBTREE_BLACK){
+        w -> color = RBTREE_RED;
+        x = x -> parent;
+      } else {
+        if (w -> left -> color == RBTREE_BLACK) {
+          w -> right -> color = RBTREE_BLACK;
+          w -> color = RBTREE_RED;
+          rbtree_rotateLeft(t, w);
+          w = x -> parent -> left;
         }
-    }
-    z->color = RBTREE_BLACK;
+        w -> color = x -> parent -> color;
+        x -> parent -> color = RBTREE_BLACK;
+        w -> left -> color = RBTREE_BLACK;
+        rbtree_rotateRight(t, x -> parent);
+        x = t -> root;
+      }
+    } 
+  }
+  x -> color = RBTREE_BLACK;
 }
 int rbtree_erase(rbtree* t, node_t* p)
 {
